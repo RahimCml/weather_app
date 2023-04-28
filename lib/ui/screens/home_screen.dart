@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/bloc/weather/weather_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,7 +35,18 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Temperature'),
+            BlocBuilder<WeatherBloc, WeatherState>(
+              builder: (context, state) {
+                if(state is WeatherFetchFailure) {
+                  return const CircularProgressIndicator();
+                } else if(state is WeatherFetchFailure) {
+                  return Text(state.globalFailure.failureMessage);
+                } else if(state is WeatherFetchSuccess) {
+                  return Text(state.weatherInfo.main!.temp.toString());
+                }
+                return const SizedBox();
+              },
+            ),
             const SizedBox(
               height: 24,
             ),
@@ -48,7 +61,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 24,
             ),
-            ElevatedButton(onPressed: () {}, child: const Text('Button'))
+            ElevatedButton(
+                onPressed: () {
+                  context
+                      .read<WeatherBloc>()
+                      .add(WeatherFetchEvent(cityName: _textcontroller.text));
+                  _textcontroller.clear();
+                },
+                child: const Text('Button'))
           ],
         ),
       ),
