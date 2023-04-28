@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if(state is WeatherFetchFailure) {
                   return Text(state.globalFailure.failureMessage);
                 } else if(state is WeatherFetchSuccess) {
-                  return Text(state.weatherInfo.main!.temp.toString());
+                  return Text(state.weatherInfo.main!.temp.toString(), style: const TextStyle(fontSize: 20),);
                 }
                 return const SizedBox();
               },
